@@ -1,0 +1,23 @@
+{
+  "name": "benchmark",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fission-suite/benchmark"
+  },
+  "keywords": [],
+  "author": "James Walker <james@fission.codes>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/fission-suite/benchmark/issues"
+  },
+  "homepage": "https://github.com/fission-suite/benchmark#readme",
+  "devDependencies": {
+    "snowpack": "^3.0.11"
+  }
+}
