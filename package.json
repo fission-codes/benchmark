@@ -19,5 +19,8 @@
   "homepage": "https://github.com/fission-suite/benchmark#readme",
   "devDependencies": {
     "snowpack": "^3.0.11"
+  },
+  "dependencies": {
+    "webnative": "^0.21.3"
   }
 }
