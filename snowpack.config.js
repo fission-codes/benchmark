@@ -5,7 +5,7 @@ module.exports = {
     src: { url: '/dist' },
   },
   plugins: [
-    /* ... */
+    "@snowpack/plugin-postcss"
   ],
   packageOptions: {
     /* ... */

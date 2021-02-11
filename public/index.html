@@ -6,10 +6,17 @@
     <meta name="description" content="Webnative Benchmark App" />
     <title>Webnative Benchmark</title>
     <script defer type="module" src="/dist/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/dist/index.css" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <button id="auth">login</button>
-    <button id="leave">leave</button>
+    <div class="flex flex-col min-h-screen">
+      <div class="px-6 flex flex-auto flex-col items-center justify-center py-12 text-center">      
+        <h1 class="text-2xl text-gray-600 dark:text-gray-400">Webnative Benchmark</h1>
+        <button id="auth" class="btn">login</button>
+        <button id="leave" class="btn">leave</button>
+        <div id="loading">Loading...</div>
+      </div>
+    </div>
   </body>
 </html>
