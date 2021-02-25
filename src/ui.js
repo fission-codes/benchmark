@@ -1,8 +1,11 @@
 export const renderMeasurements = () => {
   const measures = performance.getEntriesByType("measure");
+  let output = "";
   measures.forEach((measureItem) => {
-    console.log(`${measureItem.name}: ${measureItem.duration}`);
+    output += `${measureItem.name}: ${measureItem.duration} ms\n`;
   });
+
+  setContent("performance", output);
 };
 
 export const showIds = (...ids) => {
@@ -15,4 +18,12 @@ export const hideIds = (...ids) => {
   ids.forEach((id) => {
     document.getElementById(id).style.display = "none";
   });
+};
+
+export const setContent = (id, value) => {
+  document.getElementById(id).innerHTML = value;
+};
+
+export const setClickHandler = (id, callback) => {
+  document.getElementById(id).onclick = callback;
 };

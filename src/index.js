@@ -1,17 +1,22 @@
 import * as wn from "webnative";
-import { showIds, hideIds, renderMeasurements } from "./ui";
+import {
+  showIds,
+  hideIds,
+  renderMeasurements,
+  setContent,
+  setClickHandler,
+} from "./ui";
+import { initFilesystem } from "./filesystem";
 
-let fs;
-
-showIds('loading')
-hideIds('auth', 'leave')
+showIds("loading");
+hideIds("welcome", "user", "filesystem");
 wn.setup.debug({ enabled: true });
 
 performance.mark("BEGIN_INITIALISE");
 wn.initialise({
   permissions: {
     app: {
-      name: "Performance",
+      name: "Benchmark",
       creator: "Fission",
     },
   },
@@ -23,19 +28,20 @@ wn.initialise({
     switch (state.scenario) {
       case wn.Scenario.NotAuthorised:
         console.warn("not authorised");
-        showIds("auth");
-        hideIds("leave");
+        showIds("welcome");
+        hideIds("user");
         break;
       case wn.Scenario.AuthCancelled:
         console.warn("auth cancelled");
-        showIds("auth");
-        hideIds("leave");
+        showIds("welcome");
+        hideIds("user");
         break;
       case wn.Scenario.AuthSucceeded:
       case wn.Scenario.Continuation:
-        showIds("leave");
-        hideIds("auth");
-        fs = state.fs;
+        showIds("user");
+        hideIds("welcome");
+        setContent("username", state.username);
+        initFilesystem(state.fs);
         break;
     }
 
@@ -47,10 +53,10 @@ wn.initialise({
       wn.leave();
     };
 
-    document.getElementById("auth").onclick = auth;
-    document.getElementById("leave").onclick = leave;
+    setClickHandler("auth", auth);
+    setClickHandler("leave", leave);
+    hideIds("loading");
 
-    hideIds('loading')
     renderMeasurements();
   })
   .catch((err) => {

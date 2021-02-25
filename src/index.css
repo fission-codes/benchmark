@@ -9,3 +9,7 @@
 .btn:hover {
   @apply bg-gray-200 text-black;
 }
+
+th {
+  text-align: left;
+}
