@@ -1,4 +1,5 @@
 import * as wn from "webnative";
+import feather from 'feather-icons';
 import {
   showIds,
   hideIds,
@@ -10,6 +11,7 @@ import { initFilesystem } from "./filesystem";
 
 showIds("loading");
 hideIds("welcome", "user", "filesystem");
+feather.replace();
 wn.setup.debug({ enabled: true });
 
 performance.mark("BEGIN_INITIALISE");

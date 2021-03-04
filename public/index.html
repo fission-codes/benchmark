@@ -17,7 +17,7 @@
         </h1>
         <div id="user" class="mx-4">
           <div id="username" class="mx-4 py-2"></div>
-          <button id="leave" class="btn">leave</button>
+          <button id="leave"><i data-feather="log-out"></i></button>
         </div>
       </header>
       <div
@@ -35,17 +35,17 @@
           <div class="w-1/2 divide-y-2 divide-gray-100 m-2">
             <div class="flex w-full py-2">
               <input id="input-file" type="file" class="flex-auto" />
-              <button id="add-file" class="btn">add file</button>
+              <button id="add-file"><i data-feather="file-plus"></i></button>
             </div>
             <div class="flex w-full py-2">
               <input id="folder-name" type="text" placeholder="folder name" class="flex-auto" />
-              <button id="add-folder" class="btn">add folder</button>
+              <button id="add-folder"><i data-feather="folder-plus"></i></button>
             </div>
           </div>
           <div id="files" class="w-1/2 m-2 p-2">
             <div class="flex">
               <h3 id="dirname" class="flex-auto text-lg mt-2"></h3>
-              <a id="cd-up">^</a>  
+              <button id="cd-up"><i data-feather="corner-up-left"></i></button>  
             </div>
             <div id="ls-output" class="bg-gray-100"></div>
           </div>

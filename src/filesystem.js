@@ -1,4 +1,5 @@
 import { renderMeasurements, setClickHandler, setContent, showIds } from "./ui";
+import feather from 'feather-icons';
 
 let fs;
 
@@ -52,6 +53,10 @@ const handleCdUp = () => {
   listFiles();
 }
 
+const renderFileIcon = file => {
+  return `<i data-feather="${file.isFile ? 'file' : 'folder'}"></i>`
+}
+
 const renderFileSize = (size) => {
   var i = Math.floor( Math.log(size) / Math.log(1024) );
   return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
@@ -67,7 +72,7 @@ const renderFiles = (files) => {
     '<table class="w-full"><tr><th></th><th>Name</th><th>Size</th><th>Last Modified</th>';
   Object.values(files).map((file) => {
     output += "<tr>";
-    output += `<td>${file.isFile ? "_" : "+"}</td>`;
+    output += `<td>${renderFileIcon(file)}</td>`;
     output += `<td>${renderToggle(file)}</td>`;
     output += `<td>${renderFileSize(file.size)}</td>`;
     output += `<td>${new Date(file.mtime).toLocaleString()}</td>`;
@@ -76,6 +81,7 @@ const renderFiles = (files) => {
   output += "</table>";
   setContent('dirname', currentPath);
   setContent('ls-output', output);
+  feather.replace();
 };
 
 export const initFilesystem = async (fileSystem) => {
