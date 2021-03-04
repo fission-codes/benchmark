@@ -42,12 +42,18 @@
               <button id="add-folder" class="btn">add folder</button>
             </div>
           </div>
-          <div id="ls-output" class="w-1/2 bg-gray-100 m-2 p-2"></div>
+          <div id="files" class="w-1/2 m-2 p-2">
+            <div class="flex">
+              <h3 id="dirname" class="flex-auto text-lg mt-2"></h3>
+              <a id="cd-up">^</a>  
+            </div>
+            <div id="ls-output" class="bg-gray-100"></div>
+          </div>
         </div>
       </div>
       <div class="m-4">
         <h2 class="text-xl text-gray-900">Measurements</h2>
-        <pre id="performance" class="font-mono"></pre>
+        <pre id="performance" class="font-mono w-full overflow-auto"></pre>
       </div>
       <div id="loading" class="dark:text-white">Loading...</div>
     </div>

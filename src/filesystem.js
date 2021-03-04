@@ -2,11 +2,13 @@ import { renderMeasurements, setClickHandler, setContent, showIds } from "./ui";
 
 let fs;
 
+let currentPath = 'private';
+
 const listFiles = async () => {
   performance.mark("BEGIN_LS");
-  const files = await fs.ls(fs.appPath());
+  let files = await fs.ls(currentPath);
   renderFiles(files);
-  performance.measure("FS_LS", "BEGIN_LS");
+  performance.measure(`FS_LS ${currentPath}`, "BEGIN_LS");
   renderMeasurements();
 };
 
@@ -15,11 +17,11 @@ const addFile = async () => {
   if (!file) return;
 
   performance.mark("BEGIN_ADD");
-  await fs.add(fs.appPath(file.name), file);
+  await fs.add(`${currentPath}/${file.name}`, file);
   await fs.publish();
   performance.measure("FS_ADD", "BEGIN_ADD");
 
-  listFiles();
+  listFiles('private');
 };
 
 const mkDir = async () => {
@@ -27,25 +29,53 @@ const mkDir = async () => {
   if (!name) return;
 
   performance.mark("BEGIN_MKDIR");
-  await fs.mkdir(fs.appPath(name));
+  await fs.mkdir(`${currentPath}/${name}`);
   await fs.publish();
   performance.measure("FS_MKDIR", "BEGIN_MKDIR");
 
   listFiles();
 };
 
+const handleClickFolder = e => {
+  if (!e.target.attributes['data-path']) return;
+  const path = e.target.attributes['data-path'].value;
+  currentPath = path;
+  listFiles(path);
+}
+
+const handleCdUp = () => {
+  const parts = currentPath.split('/');
+  if (parts.length <= 1) return;
+
+  parts.pop();
+  currentPath = parts.join('/')
+  listFiles();
+}
+
+const renderFileSize = (size) => {
+  var i = Math.floor( Math.log(size) / Math.log(1024) );
+  return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+};
+
+const renderToggle = file => {
+  if (file.isFile) return file.name;
+  return `<a href="#" class="fs-toggle text-blue-500" data-path="${currentPath}/${file.name}">${file.name}</a>`;
+}
+
 const renderFiles = (files) => {
   let output =
-    '<table class="w-full"><tr><th></th><th>Name</th><th>Modified</th>';
+    '<table class="w-full"><tr><th></th><th>Name</th><th>Size</th><th>Last Modified</th>';
   Object.values(files).map((file) => {
     output += "<tr>";
     output += `<td>${file.isFile ? "_" : "+"}</td>`;
-    output += `<td>${file.name}</td>`;
+    output += `<td>${renderToggle(file)}</td>`;
+    output += `<td>${renderFileSize(file.size)}</td>`;
     output += `<td>${new Date(file.mtime).toLocaleString()}</td>`;
     output += "</tr>";
   });
   output += "</table>";
-  setContent("ls-output", output);
+  setContent('dirname', currentPath);
+  setContent('ls-output', output);
 };
 
 export const initFilesystem = async (fileSystem) => {
@@ -58,6 +88,9 @@ export const initFilesystem = async (fileSystem) => {
   performance.measure("FS_INIT", "BEGIN_FS_INIT");
   setClickHandler("add-file", addFile);
   setClickHandler("add-folder", mkDir);
+  setClickHandler("cd-up", handleCdUp);
+  setClickHandler("ls-output", handleClickFolder);
+
   showIds("filesystem");
   listFiles();
 };
