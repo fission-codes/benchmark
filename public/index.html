@@ -15,21 +15,28 @@
         <h1 class="text-2xl mx-4 flex-auto text-gray-600 dark:text-gray-400">
           Webnative Benchmark
         </h1>
-        <div id="user" class="mx-4">
+        <div id="user" class="hidden mx-4">
           <div id="username" class="mx-4 py-2"></div>
           <button id="leave"><i data-feather="log-out"></i></button>
         </div>
       </header>
       <div
+        id="error"
+        class="m-4 p-8 hidden border border-red-900 border-r-2 text-red-900 bg-red-400"
+      >
+        <div id="error-message" class="flex-auto"></div>
+        <button id="error-close" class="justify-end"><i data-feather="x-circle"></i></button>
+      </div>
+      <div
         id="welcome"
-        class="px-6 flex flex-auto flex-col items-center justify-center py-12 text-center"
+        class="hidden px-6 flex-auto flex-col items-center justify-center py-12 text-center"
       >
         <div class="text-gray-600 text-xl m-2">
           This is a space to test webnative features and performance.
         </div>
         <button id="auth" class="btn">login</button>
       </div>
-      <div id="filesystem" class="flex flex-auto flex-col p-4">
+      <div id="filesystem" class="hidden flex-auto flex-col p-4">
         <h2 class="text-xl text-gray-900">Filesystem</h2>
         <div class="container flex flex-row">
           <div class="w-1/2 divide-y-2 divide-gray-100 m-2">
@@ -38,14 +45,21 @@
               <button id="add-file"><i data-feather="file-plus"></i></button>
             </div>
             <div class="flex w-full py-2">
-              <input id="folder-name" type="text" placeholder="folder name" class="flex-auto" />
-              <button id="add-folder"><i data-feather="folder-plus"></i></button>
+              <input
+                id="folder-name"
+                type="text"
+                placeholder="folder name"
+                class="flex-auto"
+              />
+              <button id="add-folder">
+                <i data-feather="folder-plus"></i>
+              </button>
             </div>
           </div>
           <div id="files" class="w-1/2 m-2 p-2">
             <div class="flex">
               <h3 id="dirname" class="flex-auto text-lg mt-2"></h3>
-              <button id="cd-up"><i data-feather="corner-up-left"></i></button>  
+              <button id="cd-up"><i data-feather="corner-up-left"></i></button>
             </div>
             <div id="ls-output" class="bg-gray-100"></div>
           </div>

@@ -1,7 +1,8 @@
 import * as wn from "webnative";
-import feather from 'feather-icons';
+import feather from "feather-icons";
 import {
   showIds,
+  showError,
   hideIds,
   renderMeasurements,
   setContent,
@@ -10,8 +11,8 @@ import {
 import { initFilesystem } from "./filesystem";
 
 showIds("loading");
-hideIds("welcome", "user", "filesystem");
 feather.replace();
+
 wn.setup.debug({ enabled: true });
 
 performance.mark("BEGIN_INITIALISE");
@@ -62,5 +63,6 @@ wn.initialise({
     renderMeasurements();
   })
   .catch((err) => {
-    console.error(err);
+    hideIds("loading")
+    showError(err);
   });
