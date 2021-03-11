@@ -17,7 +17,7 @@
         </h1>
         <div id="user" class="hidden mx-4">
           <div id="username" class="mx-4 py-2"></div>
-          <button id="leave"><i data-feather="log-out"></i></button>
+          <button id="leave"><i title="logout" data-feather="log-out"></i></button>
         </div>
       </header>
       <div
@@ -33,6 +33,13 @@
       >
         <div class="text-gray-600 text-xl m-2">
           This is a space to test webnative features and performance.
+        </div>
+        <div class="m-2">
+          Select an environment:
+          <select id="environment">'
+            <option value="production">Production</option>
+            <option value="staging">Staging</option>
+          </select>  
         </div>
         <button id="auth" class="btn">login</button>
       </div>
