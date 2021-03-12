@@ -1,16 +1,29 @@
-import { renderMeasurements, setClickHandler, setContent, showIds } from "./ui";
-import feather from 'feather-icons';
+import {
+  renderMeasurements,
+  setClickHandler,
+  setContent,
+  showError,
+  showIds,
+} from "./ui";
+import feather from "feather-icons";
 
 let fs;
 
-let currentPath = 'private';
+let currentPath;
 
 const listFiles = async () => {
-  performance.mark("BEGIN_LS");
-  let files = await fs.ls(currentPath);
-  renderFiles(files);
-  performance.measure(`FS_LS ${currentPath}`, "BEGIN_LS");
-  renderMeasurements();
+  if (!currentPath) {
+    currentPath = fs.appPath();
+  }
+  try {
+    performance.mark("BEGIN_LS");
+    let files = await fs.ls(currentPath);
+    renderFiles(files);
+    performance.measure(`FS_LS ${currentPath}`, "BEGIN_LS");
+    renderMeasurements();
+  } catch (err) {
+    showError(err);
+  }
 };
 
 const addFile = async () => {
@@ -22,7 +35,7 @@ const addFile = async () => {
   await fs.publish();
   performance.measure("FS_ADD", "BEGIN_ADD");
 
-  listFiles('private');
+  listFiles("private");
 };
 
 const mkDir = async () => {
@@ -37,35 +50,39 @@ const mkDir = async () => {
   listFiles();
 };
 
-const handleClickFolder = e => {
-  if (!e.target.attributes['data-path']) return;
-  const path = e.target.attributes['data-path'].value;
+const handleClickFolder = (e) => {
+  if (!e.target.attributes["data-path"]) return;
+  const path = e.target.attributes["data-path"].value;
   currentPath = path;
   listFiles(path);
-}
+};
 
 const handleCdUp = () => {
-  const parts = currentPath.split('/');
+  const parts = currentPath.split("/");
   if (parts.length <= 1) return;
 
   parts.pop();
-  currentPath = parts.join('/')
+  currentPath = parts.join("/");
   listFiles();
-}
-
-const renderFileIcon = file => {
-  return `<i data-feather="${file.isFile ? 'file' : 'folder'}"></i>`
-}
-
-const renderFileSize = (size) => {
-  var i = Math.floor( Math.log(size) / Math.log(1024) );
-  return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 };
 
-const renderToggle = file => {
+const renderFileIcon = (file) => {
+  return `<i data-feather="${file.isFile ? "file" : "folder"}"></i>`;
+};
+
+const renderFileSize = (size) => {
+  var i = Math.floor(Math.log(size) / Math.log(1024));
+  return (
+    (size / Math.pow(1024, i)).toFixed(2) * 1 +
+    " " +
+    ["B", "kB", "MB", "GB", "TB"][i]
+  );
+};
+
+const renderToggle = (file) => {
   if (file.isFile) return file.name;
   return `<a href="#" class="fs-toggle text-blue-500" data-path="${currentPath}/${file.name}">${file.name}</a>`;
-}
+};
 
 const renderFiles = (files) => {
   let output =
@@ -79,8 +96,8 @@ const renderFiles = (files) => {
     output += "</tr>";
   });
   output += "</table>";
-  setContent('dirname', currentPath);
-  setContent('ls-output', output);
+  setContent("dirname", currentPath);
+  setContent("ls-output", output);
   feather.replace();
 };
 

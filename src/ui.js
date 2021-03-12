@@ -24,6 +24,15 @@ export const setContent = (id, value) => {
   document.getElementById(id).innerHTML = value;
 };
 
+export const showError = (err) => {
+  console.error(err);
+  setContent("error-message", err.message);
+  showIds("error");
+  setClickHandler("error-close", () => {
+    hideIds("error")
+  })
+};
+
 export const setClickHandler = (id, callback) => {
   document.getElementById(id).onclick = callback;
 };
