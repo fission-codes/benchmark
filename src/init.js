@@ -52,7 +52,8 @@ const init = (env = "prod") => {
       };
 
       const leave = () => {
-        wn.leave();
+        wn.leave({ withoutRedirect: true });
+        window.location.reload();
       };
 
       setClickHandler("auth", auth);
@@ -70,7 +71,7 @@ const init = (env = "prod") => {
 export default init;
 
 const environments = {
-  prod: {
+  production: {
     api: "https://runfission.com",
     lobby: "https://auth.fission.codes",
     user: "fission.name",
