@@ -23,10 +23,10 @@
     "postcss": "^8.2.8",
     "postcss-cli": "^8.3.1",
     "snowpack": "^3.0.13",
-    "tailwindcss": "^2.0.3"
+    "tailwindcss": "^2.0.4"
   },
   "dependencies": {
     "feather-icons": "^4.28.0",
-    "webnative": "^0.22.0-alpha-9"
+    "webnative": "^0.22.0-alpha-11"
   }
 }
