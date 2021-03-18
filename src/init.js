@@ -9,18 +9,20 @@ import {
 } from "./ui";
 import { initFilesystem } from "./filesystem";
 
-const init = (env = "prod") => {
+const init = (env = "prod", fs = { privatePaths: [], publicPaths: [] }) => {
   showIds("loading");
 
   wn.setup.endpoints(environments[env]);
 
   performance.mark("BEGIN_INITIALISE");
+
   wn.initialise({
     permissions: {
       app: {
         name: "Benchmark",
         creator: "Fission",
       },
+      fs
     },
   })
     .then(async (state) => {
@@ -43,7 +45,7 @@ const init = (env = "prod") => {
           showIds("user");
           hideIds("welcome");
           setContent("username", state.username);
-          initFilesystem(state.fs);
+          initFilesystem(state.fs, state.permissions);
           break;
       }
 
@@ -52,6 +54,7 @@ const init = (env = "prod") => {
       };
 
       const leave = () => {
+        sessionStorage.clear()
         wn.leave({ withoutRedirect: true });
         window.location.reload();
       };

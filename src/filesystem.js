@@ -8,12 +8,43 @@ import {
 import feather from "feather-icons";
 
 let fs;
+let roots;
 
-let currentPath;
+let currentPath = null;
+
+const getRoots = () => {
+  let files = {};
+
+  // Add the app path
+  files[fs.appPath()] = {
+    name: fs.appPath(),
+  };
+
+  // Add private paths
+  roots.privatePaths.forEach((path) => {
+    files[`private/${path}`] = {
+      name: `private/${path}`,
+    };
+  });
+
+  // Add public paths
+  roots.publicPaths.forEach((path) => {
+    files[`public/${path}`] = {
+      name: `public/${path}`,
+    };
+  });
+
+  return files;
+};
+
+const isRoot = (path) => {
+  const roots = getRoots();
+  return roots.hasOwnProperty(path);
+};
 
 const listFiles = async () => {
   if (!currentPath) {
-    currentPath = fs.appPath();
+    return renderFiles(getRoots());
   }
   try {
     performance.mark("BEGIN_LS");
@@ -58,9 +89,15 @@ const handleClickFolder = (e) => {
 };
 
 const handleCdUp = () => {
-  const parts = currentPath.split("/");
-  if (parts.length <= 1) return;
+  if (!currentPath) return;
 
+  if (isRoot(currentPath)) {
+    currentPath = null;
+    listFiles();
+    return;
+  }
+
+  const parts = currentPath.split("/");
   parts.pop();
   currentPath = parts.join("/");
   listFiles();
@@ -70,7 +107,16 @@ const renderFileIcon = (file) => {
   return `<i data-feather="${file.isFile ? "file" : "folder"}"></i>`;
 };
 
+const renderToggle = (file) => {
+  if (file.isFile) return file.name;
+
+  const path = currentPath ? `${currentPath}/${file.name}` : file.name;
+  return `<a href="#" class="fs-toggle text-blue-500" data-path="${path}">${file.name}</a>`;
+};
+
 const renderFileSize = (size) => {
+  if (!size) return "";
+
   var i = Math.floor(Math.log(size) / Math.log(1024));
   return (
     (size / Math.pow(1024, i)).toFixed(2) * 1 +
@@ -79,9 +125,9 @@ const renderFileSize = (size) => {
   );
 };
 
-const renderToggle = (file) => {
-  if (file.isFile) return file.name;
-  return `<a href="#" class="fs-toggle text-blue-500" data-path="${currentPath}/${file.name}">${file.name}</a>`;
+const renderDate = (mtime) => {
+  if (!mtime) return "";
+  return new Date(mtime).toLocaleString();
 };
 
 const renderFiles = (files) => {
@@ -92,7 +138,7 @@ const renderFiles = (files) => {
     output += `<td>${renderFileIcon(file)}</td>`;
     output += `<td>${renderToggle(file)}</td>`;
     output += `<td>${renderFileSize(file.size)}</td>`;
-    output += `<td>${new Date(file.mtime).toLocaleString()}</td>`;
+    output += `<td>${renderDate(file.mtime)}</td>`;
     output += "</tr>";
   });
   output += "</table>";
@@ -101,14 +147,18 @@ const renderFiles = (files) => {
   feather.replace();
 };
 
-export const initFilesystem = async (fileSystem) => {
+export const initFilesystem = async (fileSystem, permissions) => {
   fs = fileSystem;
+  roots = permissions.fs;
+
   performance.mark("BEGIN_FS_INIT");
   if (!(await fs.exists(fs.appPath()))) {
     await fs.mkdir(fs.appPath());
     await fs.publish();
   }
   performance.measure("FS_INIT", "BEGIN_FS_INIT");
+  
+  // Setup UI
   setClickHandler("add-file", addFile);
   setClickHandler("add-folder", mkDir);
   setClickHandler("cd-up", handleCdUp);

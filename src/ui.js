@@ -8,6 +8,12 @@ export const renderMeasurements = () => {
   setContent("performance", output);
 };
 
+export const renderPaths = (paths) => {
+  let content = paths.privatePaths.map((path) => `<li>private/${path}</li>`).join('\n');
+  content += paths.publicPaths.map((path) => `<li>public/${path}</li>`).join('\n');
+  setContent('path-list', content);
+}
+
 export const showIds = (...ids) => {
   ids.forEach((id) => {
     document.getElementById(id).style.display = "flex";

@@ -17,7 +17,9 @@
         </h1>
         <div id="user" class="hidden mx-4">
           <div id="username" class="mx-4 py-2"></div>
-          <button id="leave"><i title="logout" data-feather="log-out"></i></button>
+          <button id="leave">
+            <i title="logout" data-feather="log-out"></i>
+          </button>
         </div>
       </header>
       <div
@@ -25,7 +27,9 @@
         class="m-4 p-8 hidden border border-red-900 border-r-2 text-red-900 bg-red-400"
       >
         <div id="error-message" class="flex-auto"></div>
-        <button id="error-close" class="justify-end"><i data-feather="x-circle"></i></button>
+        <button id="error-close" class="justify-end">
+          <i data-feather="x-circle"></i>
+        </button>
       </div>
       <div
         id="welcome"
@@ -34,14 +38,37 @@
         <div class="text-gray-600 text-xl m-2">
           This is a space to test webnative features and performance.
         </div>
-        <div class="m-2">
+        <button id="auth" class="btn">
+          <div class="flex items-center pt-px">
+            <span class="mr-2 opacity-30 text-white w-4">
+              <svg height="100%" width="100%" viewBox="0 0 98 94">
+                <path
+                  d="M30 76a12 12 0 110 11H18a18 18 0 010-37h26l-4-6H18a18 18 0 010-37c6 0 11 2 15 7l3 5 10 14h33a8 8 0 000-15H68a12 12 0 110-11h11a18 18 0 010 37H53l4 6h22a18 18 0 11-14 30l-3-4-10-15H18a8 8 0 000 15h12zm41-6l2 4 6 2a8 8 0 000-15H65l6 9zM27 25l-3-5-6-2a8 8 0 000 15h15l-6-8z"
+                  fill="currentColor"
+                  fill-rule="nonzero"
+                ></path>
+              </svg>
+            </span>
+            Sign in with Fission
+          </div>
+        </button>
+        <div class="m-4 p-4">
           Select an environment:
-          <select id="environment">'
+          <select id="environment">
             <option value="production">Production</option>
             <option value="staging">Staging</option>
-          </select>  
+          </select>
         </div>
-        <button id="auth" class="btn">login</button>
+        <div class="m-4 p-4 border rounded">
+          <h3>Request paths</h3>
+          <ul id="path-list" class="m-2 text-left list-disc list-inside"></ul>
+          <input id="path-name" placeholder="e.g. Documents" class="border border-gray-600 py-2 px-4 rounded" />
+          <select id="path-type">
+            <option value="private">Private</option>
+            <option value="public">Public</option>
+          </select>
+          <button id="path-add" class="btn">Add path</button>
+        </div>
       </div>
       <div id="filesystem" class="hidden flex-auto flex-col p-4">
         <h2 class="text-xl text-gray-900">Filesystem</h2>
