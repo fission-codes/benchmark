@@ -52,22 +52,32 @@
             Sign in with Fission
           </div>
         </button>
-        <div class="m-4 p-4">
-          Select an environment:
-          <select id="environment">
-            <option value="production">Production</option>
-            <option value="staging">Staging</option>
-          </select>
-        </div>
-        <div class="m-4 p-4 border rounded">
-          <h3>Request paths</h3>
-          <ul id="path-list" class="m-2 text-left list-disc list-inside"></ul>
-          <input id="path-name" placeholder="e.g. Documents" class="border border-gray-600 py-2 px-4 rounded" />
-          <select id="path-type">
-            <option value="private">Private</option>
-            <option value="public">Public</option>
-          </select>
-          <button id="path-add" class="btn">Add path</button>
+        <div id="settings" class="flex flex-col text-left m-8 p-4 border rounded">
+          <h2 class="text-lg">Options</h2>
+          <div class="py-2 w-full">
+            Select a webnative version:
+            <select id="webnative-version">
+              <option value="0.21.4">v0.21.4</option>
+              <option value="0.22.0-alpha-12">v0.22.0-alpha-12</option>
+            </select>
+          </div>
+          <div class="py-2 w-full">
+            Select an environment:
+            <select id="environment">
+              <option value="production">Production</option>
+              <option value="staging">Staging</option>
+            </select>
+          </div>
+          <div class="py-2 w-full">
+            <h3>Request paths</h3>
+            <input id="path-name" placeholder="e.g. Documents" class="border border-gray-600 py-2 px-4 rounded" />
+            <select id="path-type">
+              <option value="private">Private</option>
+              <option value="public">Public</option>
+            </select>
+            <button id="path-add" class="btn">Add path</button>
+            <ul id="path-list" class="m-2 text-left list-disc list-inside"></ul>
+          </div>  
         </div>
       </div>
       <div id="filesystem" class="hidden flex-auto flex-col p-4">

@@ -1,4 +1,3 @@
-import * as wn from "webnative";
 import {
   showIds,
   showError,
@@ -9,9 +8,10 @@ import {
 } from "./ui";
 import { initFilesystem } from "./filesystem";
 
-const init = (env = "prod", fs = { privatePaths: [], publicPaths: [] }) => {
+const init = (wn, env = "prod", fs = { privatePaths: [], publicPaths: [] }) => {
   showIds("loading");
 
+  wn.setup.debug({ enabled: true });
   wn.setup.endpoints(environments[env]);
 
   performance.mark("BEGIN_INITIALISE");
