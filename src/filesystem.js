@@ -12,6 +12,27 @@ let roots;
 
 let currentPath = null;
 
+export const saveTimings = async () => {
+  const sessionStart = sessionStorage.getItem("BENCHMARK_SESSION");
+  const measures = performance.getEntriesByType("measure");
+
+  const data = {
+    userAgent: navigator.userAgent,
+    sessionStart: sessionStart,
+    version: sessionStorage.getItem("BENCHMARK_WN_VERSION"),
+    environment: sessionStorage.getItem("BENCHMARK_ENV"),
+    timings: measures.map((measure) => ({
+      name: measure.name,
+      startTime: measure.startTime,
+      duration: measure.duration,
+    })),
+  };
+
+  const fileName = fs.appPath(`timings_${sessionStart}.json`);
+  await fs.write(fileName, JSON.stringify(data));
+  await fs.publish();
+};
+
 const getRoots = () => {
   let files = {};
 
@@ -51,6 +72,7 @@ const listFiles = async () => {
     let files = await fs.ls(currentPath);
     renderFiles(files);
     performance.measure(`FS_LS ${currentPath}`, "BEGIN_LS");
+    saveTimings();
     renderMeasurements();
   } catch (err) {
     showError(err);
@@ -157,7 +179,7 @@ export const initFilesystem = async (fileSystem, permissions) => {
     await fs.publish();
   }
   performance.measure("FS_INIT", "BEGIN_FS_INIT");
-  
+
   // Setup UI
   setClickHandler("add-file", addFile);
   setClickHandler("add-folder", mkDir);
