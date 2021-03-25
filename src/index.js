@@ -6,7 +6,7 @@ feather.replace();
 
 window.addEventListener("DOMContentLoaded", () => {
   const sessionStart = initSessionStorage("BENCHMARK_SESSION", Date.now());
-  const wnVersion = initSessionStorage("BENCHMARK_WN_VERSION", "0.21.4");
+  const wnVersion = initSessionStorage("BENCHMARK_WN_VERSION", "0.23.0");
   const env = initSessionStorage("BENCHMARK_ENV", "production");
   const paths = JSON.parse(
     initSessionStorage(
