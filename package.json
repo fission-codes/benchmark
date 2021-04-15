@@ -26,6 +26,7 @@
     "tailwindcss": "^2.1.1"
   },
   "dependencies": {
-    "feather-icons": "^4.28.0"
+    "feather-icons": "^4.28.0",
+    "semver": "^7.3.5"
   }
 }

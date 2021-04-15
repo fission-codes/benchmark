@@ -1,12 +1,16 @@
 import feather from "feather-icons";
+import semver from "semver";
 import init from "./init";
 import { renderPaths, setClickHandler } from "./ui";
 
+const MIN_SUPPORTED = 'v0.21.4';
+
 feather.replace();
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   const sessionStart = initSessionStorage("BENCHMARK_SESSION", Date.now());
-  const wnVersion = initSessionStorage("BENCHMARK_WN_VERSION", "0.23.0");
+  const versions = await getVersions()
+  const wnVersion = initSessionStorage("BENCHMARK_WN_VERSION", versions['latest']);
   const env = initSessionStorage("BENCHMARK_ENV", "production");
   const paths = JSON.parse(
     initSessionStorage(
@@ -16,7 +20,7 @@ window.addEventListener("DOMContentLoaded", () => {
   );
 
   const versionSelect = document.getElementById("webnative-version");
-  versionSelect.value = wnVersion;
+  await initVersionSelect(versions, versionSelect, wnVersion);
   versionSelect.onchange = (e) => {
     const version = e.target.value;
     sessionStorage.setItem("BENCHMARK_WN_VERSION", version);
@@ -76,4 +80,42 @@ const initSessionStorage = (key, defaultValue) => {
   }
 
   return value;
+};
+
+const getVersions = () => {
+  // NOTE: this is a CORS-enabled registry mirror
+  const url = "https://registry.npmjs.cf/webnative";
+  return fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      const versions = data["dist-tags"];
+      // Grab the previous major versions:
+      let lastVersion = versions["latest"];
+      Object.keys(data["versions"])
+        .reverse()
+        .forEach((v) => {
+          if (
+            !semver.prerelease(v) &&
+            semver.gt(lastVersion, MIN_SUPPORTED) && 
+            semver.minor(v) < semver.minor(lastVersion)
+          ) {
+            lastVersion = versions[v] = v;
+          }
+        });
+      return versions;
+    })
+    .catch((err) => console.error(err));
+};
+
+const initVersionSelect = async (versions, el, current) => {
+  Object.keys(versions).forEach((key) => {
+    const opt = document.createElement("option");
+    opt.value = versions[key];
+    opt.id = key;
+    opt.innerHTML = versions[key];
+    if (current === versions[key]) {
+      opt.selected = true;
+    }
+    el.appendChild(opt);
+  });
 };
