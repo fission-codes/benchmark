@@ -8,7 +8,7 @@ import {
 } from "./ui";
 import { initFilesystem } from "./filesystem";
 
-const init = (wn, env = "prod", fs = { privatePaths: [], publicPaths: [] }) => {
+const init = (wn, env = "prod", fs = { private: {}, public: {} }) => {
   showIds("loading");
 
   wn.setup.debug({ enabled: true });

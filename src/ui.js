@@ -9,8 +9,8 @@ export const renderMeasurements = () => {
 };
 
 export const renderPaths = (paths) => {
-  let content = paths.privatePaths.map((path) => `<li>private/${path}</li>`).join('\n');
-  content += paths.publicPaths.map((path) => `<li>public/${path}</li>`).join('\n');
+  let content = paths.private.directories.map((path) => `<li>private/${path}</li>`).join('\n');
+  content += paths.public.directories.map((path) => `<li>public/${path}</li>`).join('\n');
   setContent('path-list', content);
 }
 

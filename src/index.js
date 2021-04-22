@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const paths = JSON.parse(
     initSessionStorage(
       "BENCHMARK_PATHS",
-      '{ "publicPaths": [], "privatePaths": []}'
+      '{ "public": { "directories": [], "files": []}, "private": { "directories": [], "files": [] } }'
     )
   );
 
@@ -44,9 +44,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         const newName = document.getElementById("path-name").value;
         const pathType = document.getElementById("path-type").value;
         if (pathType === "public") {
-          paths.publicPaths.push(newName);
+          paths.public.directories.push(newName);
         } else {
-          paths.privatePaths.push(newName);
+          paths.private.directories.push(newName);
         }
         sessionStorage.setItem("BENCHMARK_PATHS", JSON.stringify(paths));
         document.getElementById("path-name").value = "";

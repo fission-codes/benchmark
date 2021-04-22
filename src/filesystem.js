@@ -42,14 +42,14 @@ const getRoots = () => {
   };
 
   // Add private paths
-  roots.privatePaths.forEach((path) => {
+  roots.private.directories.forEach((path) => {
     files[`private/${path}`] = {
       name: `private/${path}`,
     };
   });
 
   // Add public paths
-  roots.publicPaths.forEach((path) => {
+  roots.private.directories.forEach((path) => {
     files[`public/${path}`] = {
       name: `public/${path}`,
     };
