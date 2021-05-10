@@ -110,8 +110,7 @@ const getVersions = () => {
 const initVersionSelect = async (versions, el, current) => {
   Object.keys(versions).forEach((key) => {
     const opt = document.createElement("option");
-    opt.value = versions[key];
-    opt.id = key;
+    opt.value = key;
     opt.innerHTML = versions[key];
     if (current === versions[key]) {
       opt.selected = true;
