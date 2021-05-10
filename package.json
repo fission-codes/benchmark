@@ -20,10 +20,11 @@
   "devDependencies": {
     "@snowpack/plugin-postcss": "^1.2.2",
     "autoprefixer": "^10.2.5",
-    "postcss": "^8.2.10",
+    "cypress": "^7.2.0",
+    "postcss": "^8.2.14",
     "postcss-cli": "^8.3.1",
-    "snowpack": "^3.3.0",
-    "tailwindcss": "^2.1.1"
+    "snowpack": "^3.3.7",
+    "tailwindcss": "^2.1.2"
   },
   "dependencies": {
     "feather-icons": "^4.28.0",
