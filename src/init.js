@@ -6,7 +6,7 @@ import {
   setContent,
   setClickHandler,
 } from "./ui";
-import { initFilesystem } from "./filesystem";
+import { initFilesystem, formatForPermissions } from "./filesystem";
 
 const init = (wn, env = "prod", fs = { private: {}, public: {} }) => {
   showIds("loading");
@@ -22,7 +22,7 @@ const init = (wn, env = "prod", fs = { private: {}, public: {} }) => {
         name: "Benchmark",
         creator: "Fission",
       },
-      fs
+      fs: formatForPermissions(fs)
     },
   })
     .then(async (state) => {

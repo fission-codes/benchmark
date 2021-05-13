@@ -3,21 +3,19 @@ import semver from "semver";
 import init from "./init";
 import { renderPaths, setClickHandler } from "./ui";
 
-const MIN_SUPPORTED = 'v0.21.4';
+const MIN_SUPPORTED = "v0.21.4";
 
 feather.replace();
 
 window.addEventListener("DOMContentLoaded", async () => {
   const sessionStart = initSessionStorage("BENCHMARK_SESSION", Date.now());
-  const versions = await getVersions()
-  const wnVersion = initSessionStorage("BENCHMARK_WN_VERSION", versions['latest']);
-  const env = initSessionStorage("BENCHMARK_ENV", "production");
-  const paths = JSON.parse(
-    initSessionStorage(
-      "BENCHMARK_PATHS",
-      '{ "public": { "directories": [], "files": []}, "private": { "directories": [], "files": [] } }'
-    )
+  const versions = await getVersions();
+  const wnVersion = initSessionStorage(
+    "BENCHMARK_WN_VERSION",
+    versions["latest"]
   );
+  const env = initSessionStorage("BENCHMARK_ENV", "production");
+  const paths = JSON.parse(initSessionStorage("BENCHMARK_PATHS", "[]"));
 
   const versionSelect = document.getElementById("webnative-version");
   await initVersionSelect(versions, versionSelect, wnVersion);
@@ -41,13 +39,13 @@ window.addEventListener("DOMContentLoaded", async () => {
       };
 
       setClickHandler("path-add", () => {
-        const newName = document.getElementById("path-name").value;
-        const pathType = document.getElementById("path-type").value;
-        if (pathType === "public") {
-          paths.public.directories.push(newName);
-        } else {
-          paths.private.directories.push(newName);
-        }
+        const newPath = {
+          name: document.getElementById("path-name").value,
+          type: document.getElementById("path-type").value
+        };
+
+        paths.push(newPath);
+
         sessionStorage.setItem("BENCHMARK_PATHS", JSON.stringify(paths));
         document.getElementById("path-name").value = "";
         renderPaths(paths);
@@ -96,7 +94,7 @@ const getVersions = () => {
         .forEach((v) => {
           if (
             !semver.prerelease(v) &&
-            semver.gt(lastVersion, MIN_SUPPORTED) && 
+            semver.gt(lastVersion, MIN_SUPPORTED) &&
             semver.minor(v) < semver.minor(lastVersion)
           ) {
             lastVersion = versions[v] = v;
