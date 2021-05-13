@@ -5,6 +5,7 @@ import {
   showError,
   showIds,
 } from "./ui";
+import semver from "semver";
 import feather from "feather-icons";
 
 let fs;
@@ -28,32 +29,32 @@ export const saveTimings = async () => {
     })),
   };
 
-  const fileName = fs.appPath(`timings_${sessionStart}.json`);
-  await fs.write(fileName, JSON.stringify(data));
+  const filePath = fs.appPath(nameToFilePath(`timings_${sessionStart}.json`));
+  await fs.write(filePath, JSON.stringify(data));
   await fs.publish();
 };
 
 const getRoots = () => {
   let files = {};
 
+  const wnVersion = webnative.VERSION
+
   // Add the app path
-  files[fs.appPath()] = {
-    name: fs.appPath(),
+  files[pathToString(fs.appPath())] = {
+    name: pathToString(fs.appPath()),
   };
 
-  // Add private paths
-  roots.privatePaths.forEach((path) => {
-    files[`private/${path}`] = {
-      name: `private/${path}`,
-    };
-  });
+  roots[getKeyName('private')].forEach(path => {
+    files[`private/${pathToString(path)}`] = {
+      name: `private/${pathToString(path)}`
+    }
+  })
 
-  // Add public paths
-  roots.publicPaths.forEach((path) => {
-    files[`public/${path}`] = {
-      name: `public/${path}`,
-    };
-  });
+  roots[getKeyName('public')].forEach(path => {
+    files[`public/${pathToString(path)}`] = {
+      name: `public/${pathToString(path)}`
+    }
+  })
 
   return files;
 };
@@ -69,7 +70,7 @@ const listFiles = async () => {
   }
   try {
     performance.mark("BEGIN_LS");
-    let files = await fs.ls(currentPath);
+    let files = await fs.ls(stringToPath(currentPath));
     renderFiles(files);
     performance.measure(`FS_LS ${currentPath}`, "BEGIN_LS");
     saveTimings();
@@ -84,7 +85,7 @@ const addFile = async () => {
   if (!file) return;
 
   performance.mark("BEGIN_ADD");
-  await fs.add(`${currentPath}/${file.name}`, file);
+  await fs.add(webnative.path.file(... currentPath.split('/'), file.name), file);
   await fs.publish();
   performance.measure("FS_ADD", "BEGIN_ADD");
 
@@ -96,7 +97,7 @@ const mkDir = async () => {
   if (!name) return;
 
   performance.mark("BEGIN_MKDIR");
-  await fs.mkdir(`${currentPath}/${name}`);
+  await fs.mkdir(stringToPath(`${currentPath}/${name}`));
   await fs.publish();
   performance.measure("FS_MKDIR", "BEGIN_MKDIR");
 
@@ -188,4 +189,40 @@ export const initFilesystem = async (fileSystem, permissions) => {
 
   showIds("filesystem");
   listFiles();
+};
+
+// Some helpers to juggle versions
+const stringToPath = (path) => {
+  const wnVersion = webnative.VERSION
+  if (wnVersion && semver.minor(wnVersion) >= 24) {
+    return webnative.path.directory(...path.split('/'))
+  }
+  return path;
+}
+
+const pathToString = (path) => {
+  const wnVersion = webnative.VERSION
+  if (wnVersion && semver.minor(wnVersion) >= 24) {
+    return path.directory.join('/')
+  }
+  return path;
+}
+
+const nameToFilePath = (fileName) => {
+  const wnVersion = webnative.VERSION
+  if (wnVersion && semver.minor(wnVersion) >= 24) {
+    return webnative.path.file(fileName)
+  }
+  return fileName;
+}
+
+const getKeyName = (branch = 'private') => {
+  return (webnative.VERSION && semver.minor(webnative.VERSION) >= 24) ? branch : `${branch}Paths`;
+}
+
+export const formatForPermissions = (paths) => {
+  return {
+    [getKeyName('private')]: paths.filter(p => p.type === 'private').map(p => stringToPath(p.name)),
+    [getKeyName('public')]: paths.filter(p => p.type === 'public').map(p => stringToPath(p.name)),
+  };
 };

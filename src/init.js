@@ -6,9 +6,9 @@ import {
   setContent,
   setClickHandler,
 } from "./ui";
-import { initFilesystem } from "./filesystem";
+import { initFilesystem, formatForPermissions } from "./filesystem";
 
-const init = (wn, env = "prod", fs = { privatePaths: [], publicPaths: [] }) => {
+const init = (wn, env = "prod", fs = { private: {}, public: {} }) => {
   showIds("loading");
 
   wn.setup.debug({ enabled: true });
@@ -22,7 +22,7 @@ const init = (wn, env = "prod", fs = { privatePaths: [], publicPaths: [] }) => {
         name: "Benchmark",
         creator: "Fission",
       },
-      fs
+      fs: formatForPermissions(fs)
     },
   })
     .then(async (state) => {
