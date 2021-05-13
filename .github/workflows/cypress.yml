@@ -28,5 +28,11 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           browser: chrome
-        env:
-          CYPRESS_BASE_URL: https://benchmark.fission.app/        
+          start: npm start
+          wait-on: "http://localhost:8080"
+      - name: 🏺 Upload artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
