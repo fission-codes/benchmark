@@ -49,6 +49,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         sessionStorage.setItem("BENCHMARK_PATHS", JSON.stringify(paths));
         document.getElementById("path-name").value = "";
         renderPaths(paths);
+        init(wn, env, paths);
       });
       renderPaths(paths);
       init(wn, env, paths);
