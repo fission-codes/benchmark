@@ -19,6 +19,7 @@ Cypress.Commands.add("handleLobby", (email) => {
 });
 
 Cypress.Commands.add("clearAuth", () => {
+  sessionStorage.clear();
   indexedDB.deleteDatabase("localforge");
   indexedDB.deleteDatabase("keystore");
 })

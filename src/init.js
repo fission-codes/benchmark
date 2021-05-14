@@ -8,7 +8,7 @@ import {
 } from "./ui";
 import { initFilesystem, formatForPermissions } from "./filesystem";
 
-const init = (wn, env = "prod", fs = { private: {}, public: {} }) => {
+const init = (wn, env = "prod", fs = []) => {
   showIds("loading");
 
   wn.setup.debug({ enabled: true });
