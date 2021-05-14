@@ -6,17 +6,21 @@ describe("Filesystem", () => {
 
     cy.visit("/");
 
+    // Request paths:
+    cy.get('#path-name').type('Documents/Testing')
+    cy.get('#path-type').select('private')
+    cy.get('#path-add').click()
+    cy.get('#path-name').type('Pictures/Testing')
+    cy.get('#path-type').select('public')
+    cy.get('#path-add').click()
+
+
     const version = Cypress.env("WEBNATIVE") || "latest";
 
     // Pick the current version
     cy.get("#webnative-version").select(version);
 
     cy.get("#environment").select("staging");
-
-    // Request paths:
-    cy.get('#path-name').type('Documents/Testing')
-    cy.get('#path-type').select('private')
-    cy.get('#path-add').click()
 
     cy.get("#auth").click();
 
