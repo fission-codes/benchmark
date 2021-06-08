@@ -22,7 +22,7 @@ const init = (wn, env = "prod", fs = []) => {
         name: "Benchmark",
         creator: "Fission",
       },
-      fs: formatForPermissions(fs)
+      fs: formatForPermissions(fs),
     },
   })
     .then(async (state) => {
@@ -54,7 +54,7 @@ const init = (wn, env = "prod", fs = []) => {
       };
 
       const leave = () => {
-        sessionStorage.clear()
+        sessionStorage.clear();
         wn.leave({ withoutRedirect: true });
         window.location.reload();
       };

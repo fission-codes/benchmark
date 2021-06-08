@@ -41,7 +41,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       setClickHandler("path-add", () => {
         const newPath = {
           name: document.getElementById("path-name").value,
-          type: document.getElementById("path-type").value
+          type: document.getElementById("path-type").value,
         };
 
         paths.push(newPath);

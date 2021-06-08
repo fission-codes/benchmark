@@ -37,24 +37,24 @@ export const saveTimings = async () => {
 const getRoots = () => {
   let files = {};
 
-  const wnVersion = webnative.VERSION
+  const wnVersion = webnative.VERSION;
 
   // Add the app path
   files[pathToString(fs.appPath())] = {
     name: pathToString(fs.appPath()),
   };
 
-  roots[getKeyName('private')].forEach(path => {
+  roots[getKeyName("private")].forEach((path) => {
     files[`private/${pathToString(path)}`] = {
-      name: `private/${pathToString(path)}`
-    }
-  })
+      name: `private/${pathToString(path)}`,
+    };
+  });
 
-  roots[getKeyName('public')].forEach(path => {
+  roots[getKeyName("public")].forEach((path) => {
     files[`public/${pathToString(path)}`] = {
-      name: `public/${pathToString(path)}`
-    }
-  })
+      name: `public/${pathToString(path)}`,
+    };
+  });
 
   return files;
 };
@@ -85,7 +85,8 @@ const addFile = async () => {
   if (!file) return;
 
   performance.mark("BEGIN_ADD");
-  await fs.add(webnative.path.file(... currentPath.split('/'), file.name), file);
+  const fullPath = stringToPath(`${currentPath}${file.name}`);
+  await fs.add(fullPath, file);
   await fs.publish();
   performance.measure("FS_ADD", "BEGIN_ADD");
 
@@ -97,7 +98,7 @@ const mkDir = async () => {
   if (!name) return;
 
   performance.mark("BEGIN_MKDIR");
-  await fs.mkdir(stringToPath(`${currentPath}/${name}`));
+  await fs.mkdir(dirToPath(`${currentPath}${name}`));
   await fs.publish();
   performance.measure("FS_MKDIR", "BEGIN_MKDIR");
 
@@ -120,9 +121,9 @@ const handleCdUp = () => {
     return;
   }
 
-  const parts = currentPath.split("/");
+  const parts = currentPath.slice(0, -1).split("/");
   parts.pop();
-  currentPath = parts.join("/");
+  currentPath = parts.join("/") + "/";
   listFiles();
 };
 
@@ -133,7 +134,7 @@ const renderFileIcon = (file) => {
 const renderToggle = (file) => {
   if (file.isFile) return file.name;
 
-  const path = currentPath ? `${currentPath}/${file.name}` : file.name;
+  const path = currentPath ? `${currentPath}${file.name}/` : file.name;
   return `<a href="#" class="fs-toggle text-blue-500" data-path="${path}">${file.name}</a>`;
 };
 
@@ -192,37 +193,54 @@ export const initFilesystem = async (fileSystem, permissions) => {
 };
 
 // Some helpers to juggle versions
-const stringToPath = (path) => {
-  const wnVersion = webnative.VERSION
+const dirToPath = (path) => {
+  // ensure directory ends with '/' if >= 24
+  const wnVersion = webnative.VERSION;
   if (wnVersion && semver.minor(wnVersion) >= 24) {
-    return webnative.path.directory(...path.split('/'))
+    if (path.slice(-1) !== "/") {
+      path += "/";
+    }
+  }
+  return stringToPath(path);
+};
+
+const stringToPath = (path) => {
+  const wnVersion = webnative.VERSION;
+  if (wnVersion && semver.minor(wnVersion) >= 24) {
+    return webnative.path.fromPosix(path);
   }
   return path;
-}
+};
 
 const pathToString = (path) => {
-  const wnVersion = webnative.VERSION
+  const wnVersion = webnative.VERSION;
   if (wnVersion && semver.minor(wnVersion) >= 24) {
-    return path.directory.join('/')
+    return webnative.path.toPosix(path);
   }
-  return path;
-}
+  return path + "/";
+};
 
 const nameToFilePath = (fileName) => {
-  const wnVersion = webnative.VERSION
+  const wnVersion = webnative.VERSION;
   if (wnVersion && semver.minor(wnVersion) >= 24) {
-    return webnative.path.file(fileName)
+    return webnative.path.file(fileName);
   }
   return fileName;
-}
+};
 
-const getKeyName = (branch = 'private') => {
-  return (webnative.VERSION && semver.minor(webnative.VERSION) >= 24) ? branch : `${branch}Paths`;
-}
+const getKeyName = (branch = "private") => {
+  return webnative.VERSION && semver.minor(webnative.VERSION) >= 24
+    ? branch
+    : `${branch}Paths`;
+};
 
 export const formatForPermissions = (paths) => {
   return {
-    [getKeyName('private')]: paths.filter(p => p.type === 'private').map(p => stringToPath(p.name)),
-    [getKeyName('public')]: paths.filter(p => p.type === 'public').map(p => stringToPath(p.name)),
+    [getKeyName("private")]: paths
+      .filter((p) => p.type === "private")
+      .map((p) => dirToPath(p.name)),
+    [getKeyName("public")]: paths
+      .filter((p) => p.type === "public")
+      .map((p) => dirToPath(p.name)),
   };
 };
