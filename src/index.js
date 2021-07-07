@@ -66,7 +66,7 @@ const loadWebnative = (version) => {
     script.type = "text/javascript";
     script.onload = resolve;
     script.onerror = reject;
-    script.src = `//unpkg.com/webnative@${version}`;
+    script.src = getSourceURL(version);
     document.head.append(script);
   });
 };
@@ -116,4 +116,12 @@ const initVersionSelect = async (versions, el, current) => {
     }
     el.appendChild(opt);
   });
+};
+
+const getSourceURL = (version) => {
+  let url = `//unpkg.com/webnative@${version}`;
+  if (version === "latest" || semver.gte(version, "0.26.0")) {
+    url += "/dist/index.min.js";
+  }
+  return url;
 };
