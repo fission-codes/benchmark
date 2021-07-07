@@ -18,13 +18,13 @@
   },
   "homepage": "https://github.com/fission-suite/benchmark#readme",
   "devDependencies": {
-    "@snowpack/plugin-postcss": "^1.4.1",
+    "@snowpack/plugin-postcss": "^1.4.3",
     "autoprefixer": "^10.2.6",
-    "cypress": "^7.5.0",
-    "postcss": "^8.3.0",
+    "cypress": "^7.6.0",
+    "postcss": "^8.3.5",
     "postcss-cli": "^8.3.1",
-    "snowpack": "^3.5.6",
-    "tailwindcss": "^2.1.4"
+    "snowpack": "^3.7.1",
+    "tailwindcss": "^2.2.4"
   },
   "dependencies": {
     "feather-icons": "^4.28.0",
