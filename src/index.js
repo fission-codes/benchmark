@@ -121,7 +121,7 @@ const initVersionSelect = async (versions, el, current) => {
 const getSourceURL = (version) => {
   let url = `//unpkg.com/webnative@${version}`;
   if (version === "latest" || semver.gte(version, "0.26.0")) {
-    url += "/dist/index.min.js";
+    url += "/dist/index.umd.min.js";
   }
   return url;
 };
