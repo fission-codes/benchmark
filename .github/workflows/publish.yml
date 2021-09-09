@@ -18,12 +18,6 @@ jobs:
         run: npm install
       - name: 🏗 Build assets
         run: npm run build
-      - name: 🚀 Publish to production
-        uses: fission-suite/publish-action@v1
-        with:
-          machine_key: ${{ secrets.MACHINE_KEY }}
-          app_url: benchmark.fission.app
-          build_dir: ./build
       - name: 🚀 Publish to staging
         uses: fission-suite/publish-action@v1
         with:
@@ -31,3 +25,9 @@ jobs:
           app_url: benchmark.fissionapp.net
           build_dir: ./build
           remote: staging
+      - name: 🚀 Publish to production
+        uses: fission-suite/publish-action@v1
+        with:
+          machine_key: ${{ secrets.MACHINE_KEY }}
+          app_url: benchmark.fission.app
+          build_dir: ./build
