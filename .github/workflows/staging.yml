@@ -1,4 +1,4 @@
-name: 🚀 Publish
+name: 🚀 Staging
 on:
   push:
     branches:
@@ -18,9 +18,10 @@ jobs:
         run: npm install
       - name: 🏗 Build assets
         run: npm run build
-      - name: 🚀 Publish to production
+      - name: 🚀 Publish to staging
         uses: fission-suite/publish-action@v1
         with:
-          machine_key: ${{ secrets.MACHINE_KEY }}
-          app_url: benchmark.fission.app
+          machine_key: ${{ secrets.STAGING_MACHINE_KEY }}
+          app_url: benchmark.fissionapp.net
           build_dir: ./build
+          remote: staging
